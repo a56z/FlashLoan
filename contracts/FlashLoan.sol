@@ -14,7 +14,7 @@ interface IReceiver {
     function receiveTokens(address tokenAddress, uint256 amount) external;
 }
 
-contract FlashLoan {
+contract FlashLoan is ReentrancyGuard {
 
     Token public token;
     uint256 public poolBalance;
@@ -29,7 +29,7 @@ contract FlashLoan {
         poolBalance += _amount; // Safe in Solidity 0.8+
     }
 
-    function flashLoan(uint256 _borrowAmount) external {
+    function flashLoan(uint256 _borrowAmount) external nonReentrant{
         require(_borrowAmount > 0, "Amount must be greater than 0");
 
         uint256 balanceBefore = token.balanceOf(address(this));
